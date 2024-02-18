@@ -176,7 +176,7 @@ public class VideoController {
 		RequestContent r = new RequestContent();
 		r.setAccessType(c);
 		r.setCategory(c1);
-		r.setCoverImage("pavangit status
+		r.setCoverImage("new code 
 		");
 		r1.save(r);
 		return r;
