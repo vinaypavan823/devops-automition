@@ -10,6 +10,7 @@ import java.nio.file.StandardOpenOption;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.backblaze.b2.client.B2StorageClient;
+import com.backblaze.b2.client.contentSources.B2ContentSource;
+import com.backblaze.b2.client.contentSources.B2FileContentSource;
 import com.backblaze.b2.client.exceptions.B2Exception;
+import com.backblaze.b2.client.structures.B2UploadFileRequest;
 import com.terralogic.hros.lms.exceptionHandling.NoResourceFound;
 import com.terralogic.hros.lms.exceptionHandling.TranscodingException;
 import com.terralogic.hros.lms.utility.BackBlazeService;
@@ -37,6 +42,9 @@ public class VideoTranscodingService2 {
 
 	@Autowired
 	BackBlazeService s;
+	
+	@Autowired
+	 private B2StorageClient client;
 
 	private final Logger logger = LoggerFactory.getLogger(VideoTranscodingService.class);
 
@@ -46,10 +54,10 @@ public class VideoTranscodingService2 {
 	public void transcodeAndStoreVideos(byte[] videoData, String videoName, String bucketName)
 			throws Exception {
 
-		Path tempDir = null;
+		Path tempDir = Files.createTempDirectory("video_transcoding");;
 		try {
 			// Create a temporary directory to store the generated files
-			tempDir = Files.createTempDirectory("video_transcoding");
+			
 
 			// Define the temporary video file path
 			Path tempVideoFile = tempDir.resolve("temp_video.mp4");
@@ -58,7 +66,7 @@ public class VideoTranscodingService2 {
 			Files.write(tempVideoFile, videoData);
 
 			// Create an executor service with a fixed number of threads
-			int numThreads = 10; // Adjust this based on your system's capabilities
+			int numThreads = 5; // Adjust this based on your system's capabilities
 			ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
 			// HLS transcoding commands
 			String[] hlsCommands = {
@@ -154,27 +162,41 @@ public class VideoTranscodingService2 {
 			// Write the master playlist content to the temporary file
 			Files.write(tempFile, masterPlaylist.getBytes(), StandardOpenOption.CREATE);
 
-
+			ExecutorService executor1 = Executors.newFixedThreadPool(10);
 			String objectNamePrefix = "videos/" + videoName;
 
 			// Upload HLS M3U8 playlist files and segment files with content type set
-			uploadFileWithContentType(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL");
-
-			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.m3u8").getFileName(), tempDir.resolve("output_144p.m3u8").toFile(), "application/x-mpegURL");
-			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.m3u8").getFileName(), tempDir.resolve("output_360p.m3u8").toFile(), "application/x-mpegURL");
-			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.m3u8").getFileName(), tempDir.resolve("output_720p.m3u8").toFile(), "application/x-mpegURL");
-			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.m3u8").getFileName(), tempDir.resolve("output_1080p.m3u8").toFile(), "application/x-mpegURL");
-
+		//	uploadFileWithContentType(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL");
+		
+			CompletableFuture<Void>[] futures = new CompletableFuture[] {
+					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.m3u8").getFileName(), tempDir.resolve("output_144p.m3u8").toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.m3u8").getFileName(), tempDir.resolve("output_360p.m3u8").toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.m3u8").getFileName(), tempDir.resolve("output_720p.m3u8").toFile(), "application/x-mpegURL",executor1),
+					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.m3u8").getFileName(), tempDir.resolve("output_1080p.m3u8").toFile(), "application/x-mpegURL",executor1)
+			};
 			// Upload HLS video segment files with content type set
 			Files.list(tempDir)
 			.filter(file -> Files.isRegularFile(file) && file.getFileName().toString().endsWith(".ts"))
 			.forEach(segmentFile -> {
+				executor1.execute(() -> {
 				try {
 					uploadFileWithContentType(bucketName, objectNamePrefix + "/" + segmentFile.getFileName().toString(), segmentFile.toFile(), "video/MP2T");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				});
 			});
+			CompletableFuture.allOf(futures).join();
+
+	        // Shutdown the executor
+	        executor1.shutdown();
+	        try {
+	            // Wait for the executor to terminate
+	            executor1.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        }
 
 			logger.info("HLS transcoding and upload completed successfully.");
 		} catch (IOException e) {
@@ -193,12 +215,38 @@ public class VideoTranscodingService2 {
 		}
 	}
 
+			 private CompletableFuture<Void> uploadFileWithContentTypeAsync(String bucketName, String objectName, File file, String contentType, ExecutorService executor) {
+		        return CompletableFuture.runAsync(() -> {
+					try {
+						uploadFileWithContentType(bucketName, objectName, file, contentType);
+					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (B2Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoResourceFound e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}, executor);
+		    }
 
-
+	
 	private void uploadFileWithContentType(String bucketName, String objectName, File file, String contentType)
-			throws IOException, InvalidKeyException, NoSuchAlgorithmException, B2Exception, NoResourceFound {
+			throws IOException,  InvalidKeyException, NoSuchAlgorithmException, B2Exception, NoResourceFound {
 		// Set the content type for the object before uploading
-		videoService.uploadVideo(bucketName, objectName, file, contentType);
+	//	videoService.uploadVideo(bucketName, objectName, file, contentType);
+		B2ContentSource source = B2FileContentSource.build(file);
+		 B2UploadFileRequest request = B2UploadFileRequest.builder(bucketName, objectName, contentType, source).build();
+	        logger.info("started");
+	        client.uploadSmallFile(request);
 	}
 }
 

@@ -30,15 +30,19 @@ import com.terralogic.hros.lms.utility.BackBlazeService;
 @RequestMapping("/api")
 
 public class VideoController {
+	
 	@Autowired
 	Environment environment;
+	
 	@Autowired
 	RequestContentRepo r1;
 	
 	@Value("${b2.userAgent}")
 	private String c;
+	
 	@Value("${secret1}")
 	private String c1;
+	
 	@Value("${spring.data}")
 	private String c2;
 
@@ -80,7 +84,9 @@ public class VideoController {
 				
 
 					try {
+						System.out.println("mpd");
 						videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+						System.out.println("mpd");
 					} catch (Exception e) {
 							//throw new TranscodingException("Transcoding failed for video " +  e);
 						e.printStackTrace();
@@ -93,8 +99,9 @@ public class VideoController {
 			CompletableFuture<Void> transcodingTask2 = CompletableFuture.runAsync(() -> {
 				
 					try {
+						System.out.println("m3u8");
 						videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
-						System.out.println("hiiiiiiii");
+						System.out.println("m3u8");
 					}  catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -176,8 +183,7 @@ public class VideoController {
 		RequestContent r = new RequestContent();
 		r.setAccessType(c);
 		r.setCategory(c1);
-		r.setCoverImage("new code 
-		");
+		r.setCoverImage("new code ");
 		r1.save(r);
 		return r;
 		
