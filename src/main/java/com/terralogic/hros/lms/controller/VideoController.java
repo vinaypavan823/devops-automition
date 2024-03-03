@@ -188,6 +188,11 @@ public class VideoController {
 		return r;
 		
 	}
+	
+	@GetMapping("/test")
+	public String jenkins() {
+		return "to check jenkins";
+	}
 
 
 
