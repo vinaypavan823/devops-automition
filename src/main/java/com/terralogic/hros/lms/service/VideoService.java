@@ -45,9 +45,9 @@ public class VideoService {
 	
 	public void executeFFmpegCommand(String command) throws  TranscodingException, IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
-	//	processBuilder.command("cmd.exe", "/c", command);
+		processBuilder.command("cmd.exe", "/c", command);
 	//  processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
-		processBuilder.command("sh", "-c", command);
+	//	processBuilder.command("sh", "-c", command);
 		processBuilder.redirectErrorStream(true); // Redirect error stream to the input stream
 		Process process = processBuilder.start();
 
@@ -85,10 +85,10 @@ public class VideoService {
 
 	public void executeMP4BoxCommand(String command) throws IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
-	//	processBuilder.command("cmd.exe", "/c", command);
+		processBuilder.command("cmd.exe", "/c", command);
 		
 	//	processBuilder.command("/usr/local/bin/MP4Box", "-version");
-		processBuilder.command("sh", "-c", command);
+	//	processBuilder.command("sh", "-c", command);
 		processBuilder.redirectErrorStream(true); // Redirect error stream to the input stream
 		Process process = processBuilder.start();
 
@@ -122,6 +122,12 @@ public class VideoService {
 		// Close input streams
 		process.getInputStream().close();
 		process.getErrorStream().close();
+	}
+	
+	public String fileName(String fileUrl ) {
+		String[] v = fileUrl.split("/");
+		String v1 = v[0] + "/" + v[1] + "/";
+		return v1;
 	}
 	
 }

@@ -38,7 +38,7 @@ public class VideoTranscodingService {
 	@Autowired
 	private VideoService videoService;
 
-	public void transcodeAndStoreVideos(byte[] videoData, String videoName, String bucketName)
+	public void transcodeAndStoreVideos(byte[] videoData, String videoName, String bucketName, String fileUrl)
 			throws IOException, InterruptedException, InvalidKeyException, NoSuchAlgorithmException,
 			B2Exception, NoResourceFound, TranscodingException {
 		// Create a temporary directory to store the generated files
@@ -108,7 +108,7 @@ public class VideoTranscodingService {
 
 			// Upload the transcoded video files with content type set
 			// String bucketName = "videos2";
-			String objectNamePrefix = "videos/" + videoName;
+			String objectNamePrefix = videoService.fileName(fileUrl)+"Dash/" + videoName;
 			logger.info("uploading started for dash");
 //			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.mp4").getFileName(), tempDir.resolve("output_144p.mp4").toFile(), "video/mp4");
 //			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.mp4").getFileName(), tempDir.resolve("output_360p.mp4").toFile(), "video/mp4");

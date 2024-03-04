@@ -1,6 +1,7 @@
 
 package com.terralogic.hros.lms.controller;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class VideoController {
 
 					try {
 						System.out.println("mpd");
-						videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+						videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName,fileUrl);
 						System.out.println("mpd");
 					} catch (Exception e) {
 							//throw new TranscodingException("Transcoding failed for video " +  e);
@@ -100,7 +101,7 @@ public class VideoController {
 				
 					try {
 						System.out.println("m3u8");
-						videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+					//	videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
 						System.out.println("m3u8");
 					}  catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -190,8 +191,10 @@ public class VideoController {
 	}
 	
 	@GetMapping("/test")
-	public String jenkins() {
-		return "to check jenkins";
+	public String fileName( @RequestParam String fileUrl ) {
+		String[] v = fileUrl.split("/");
+		String v1 = v[0] + "/" + v[1] + "/";
+		return v1;
 	}
 
 
