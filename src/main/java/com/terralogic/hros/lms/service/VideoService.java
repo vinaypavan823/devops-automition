@@ -46,8 +46,10 @@ public class VideoService {
 	public void executeFFmpegCommand(String command) throws  TranscodingException, IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
 	//	processBuilder.command("cmd.exe", "/c", command);
-	//  processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
-		processBuilder.command("sh", "-c", command);
+	//	processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
+		processBuilder.command("sh", "-c", "gnome-terminal -- bash -c '" + command + "'");
+
+	//	processBuilder.command("sh", "-c", command);
 		processBuilder.redirectErrorStream(true); // Redirect error stream to the input stream
 		Process process = processBuilder.start();
 
