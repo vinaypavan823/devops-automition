@@ -48,10 +48,10 @@ public class VideoService {
 	//	processBuilder.command("cmd.exe", "/c", command);
 	//	processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
 	//	processBuilder.command("sh", "-c", "gnome-terminal -- bash -c '" + command + "'");
-		processBuilder.command("xterm", "-e", command);
+	//	processBuilder.command("xterm", "-e", command);
 
 
-	//	processBuilder.command("sh", "-c", command);
+		processBuilder.command("sh", "-c", command);
 		processBuilder.redirectErrorStream(true); // Redirect error stream to the input stream
 		Process process = processBuilder.start();
 
