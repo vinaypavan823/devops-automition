@@ -73,14 +73,15 @@ public class VideoController {
 
 			logger.info("the video name url is " + videoUrl);
 			logger.info("transcoding started");
-			ExecutorService executorService = Executors.newFixedThreadPool(1);
+			ExecutorService executorService = Executors.newFixedThreadPool(2);
 
 			// Define CompletableFuture for each transcoding task
 			CompletableFuture<Void> transcodingTask1 = CompletableFuture.runAsync(() -> {
 				
 
 					try {
-						videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+					//	videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+						System.out.println("mpd");
 					} catch (Exception e) {
 							//throw new TranscodingException("Transcoding failed for video " +  e);
 						e.printStackTrace();
@@ -94,7 +95,7 @@ public class VideoController {
 				
 					try {
 						videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
-						System.out.println("hiiiiiiii");
+						System.out.println("m3u8");
 					}  catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -173,11 +174,11 @@ public class VideoController {
 	}
 	@PostMapping("/postdata")
 	public RequestContent addC() {
+		System.out.println("dfbefr");
 		RequestContent r = new RequestContent();
 		r.setAccessType(c);
 		r.setCategory(c1);
-		r.setCoverImage("new code 
-		");
+		r.setCoverImage("new code ");
 		r1.save(r);
 		return r;
 		

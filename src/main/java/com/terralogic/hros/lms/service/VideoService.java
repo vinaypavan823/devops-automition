@@ -29,7 +29,7 @@ public class VideoService {
     
     String contentType = "mp4";
   
-	public synchronized void uploadVideo(String bucketName, String objectName, File file, String contentType) throws B2Exception, NoResourceFound {
+	public void uploadVideo(String bucketName, String objectName, File file, String contentType) throws B2Exception, NoResourceFound {
 		
 		try {
 		B2ContentSource source = B2FileContentSource.build(file);
@@ -45,7 +45,7 @@ public class VideoService {
 		
 	}
 	
-	public synchronized void executeFFmpegCommand(String command) throws  TranscodingException, IOException, InterruptedException {
+	public void executeFFmpegCommand(String command) throws  TranscodingException, IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
 	//	processBuilder.command("cmd.exe", "/c", command);
 	// processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);

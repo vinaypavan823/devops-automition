@@ -62,7 +62,9 @@ public class BackBlazeService {
 		logger.info("the m3u8 uri is  " + m3u8);
 		logger.info("the mpd uri is  " + mpd);
 		//  String url1 = "contents/content_1702622902628/content_1702622902628.mp4"; 
-		RequestContent u =  r.findByUrl(url);
+	//	RequestContent u =  r.findByUrl(url);
+		RequestContent u = new RequestContent();
+		
 		u.setM3u8(m3u8);
 		u.setMpd(mpd);
 		u.setStreamable(true);
