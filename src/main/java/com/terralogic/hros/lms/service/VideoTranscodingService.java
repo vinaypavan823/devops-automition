@@ -32,11 +32,9 @@ public class VideoTranscodingService {
 	@Value("${ffmpeg.path}")
 	private String ffmpegPath;
 	@Autowired
-<<<<<<< HEAD
+
 	 private B2StorageClient client;
-=======
-	private B2StorageClient client;
->>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
+
 	private final Logger logger = LoggerFactory.getLogger(VideoTranscodingService.class);
 
 	@Autowired
@@ -134,11 +132,11 @@ public class VideoTranscodingService {
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.mp4").getFileName(), tempDir.resolve("output_144p.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.mp4").getFileName(), tempDir.resolve("output_360p.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.mp4").getFileName(), tempDir.resolve("output_720p.mp4").toFile(), "video/mp4", executor1),
-<<<<<<< HEAD
-	                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.mp4").getFileName(), tempDir.resolve("output_1080p.mp4").toFile(), "video/mp4", executor1),
-=======
+
+	                
+
 	                    uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.mp4").getFileName(), tempDir.resolve("output_1080p.mp4").toFile(), "video/mp4", executor1),
->>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
+
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("video.mpd").getFileName(), tempDir.resolve("video.mpd").toFile(), "application/dash+xml", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p_dashinit.mp4").getFileName(), tempDir.resolve("output_144p_dashinit.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p_dashinit.mp4").getFileName(), tempDir.resolve("output_360p_dashinit.mp4").toFile(), "video/mp4", executor1),
