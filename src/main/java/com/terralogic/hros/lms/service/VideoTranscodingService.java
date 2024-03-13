@@ -1,9 +1,7 @@
 package com.terralogic.hros.lms.service;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidKeyException;
@@ -34,13 +32,17 @@ public class VideoTranscodingService {
 	@Value("${ffmpeg.path}")
 	private String ffmpegPath;
 	@Autowired
+<<<<<<< HEAD
 	 private B2StorageClient client;
+=======
+	private B2StorageClient client;
+>>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
 	private final Logger logger = LoggerFactory.getLogger(VideoTranscodingService.class);
 
 	@Autowired
 	private VideoService videoService;
 
-	public void transcodeAndStoreVideos(byte[] videoData, String videoName, String bucketName)
+	public void transcodeAndStoreVideos(byte[] videoData, String videoName, String bucketName, String fileUrl)
 			throws IOException, InterruptedException, InvalidKeyException, NoSuchAlgorithmException,
 			B2Exception, NoResourceFound, TranscodingException {
 		// Create a temporary directory to store the generated files
@@ -110,7 +112,7 @@ public class VideoTranscodingService {
 
 			// Upload the transcoded video files with content type set
 			// String bucketName = "videos2";
-			String objectNamePrefix = "videos/" + videoName;
+			String objectNamePrefix = videoService.fileName(fileUrl)+"Dash/" + videoName;
 			logger.info("uploading started for dash");
 //			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.mp4").getFileName(), tempDir.resolve("output_144p.mp4").toFile(), "video/mp4");
 //			uploadFileWithContentType(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.mp4").getFileName(), tempDir.resolve("output_360p.mp4").toFile(), "video/mp4");
@@ -132,7 +134,11 @@ public class VideoTranscodingService {
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.mp4").getFileName(), tempDir.resolve("output_144p.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.mp4").getFileName(), tempDir.resolve("output_360p.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.mp4").getFileName(), tempDir.resolve("output_720p.mp4").toFile(), "video/mp4", executor1),
+<<<<<<< HEAD
 	                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.mp4").getFileName(), tempDir.resolve("output_1080p.mp4").toFile(), "video/mp4", executor1),
+=======
+	                    uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.mp4").getFileName(), tempDir.resolve("output_1080p.mp4").toFile(), "video/mp4", executor1),
+>>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("video.mpd").getFileName(), tempDir.resolve("video.mpd").toFile(), "application/dash+xml", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p_dashinit.mp4").getFileName(), tempDir.resolve("output_144p_dashinit.mp4").toFile(), "video/mp4", executor1),
 		                uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p_dashinit.mp4").getFileName(), tempDir.resolve("output_360p_dashinit.mp4").toFile(), "video/mp4", executor1),

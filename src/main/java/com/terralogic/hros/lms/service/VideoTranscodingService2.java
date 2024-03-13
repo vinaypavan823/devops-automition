@@ -167,12 +167,22 @@ public class VideoTranscodingService2 {
 
 			// Upload HLS M3U8 playlist files and segment files with content type set
 		//	uploadFileWithContentType(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL");
+<<<<<<< HEAD
 			CompletableFuture<Void>[] futures = new CompletableFuture[] {
 					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL",executor1),
 					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.m3u8").getFileName(), tempDir.resolve("output_144p.m3u8").toFile(), "application/x-mpegURL",executor1),
 					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.m3u8").getFileName(), tempDir.resolve("output_360p.m3u8").toFile(), "application/x-mpegURL",executor1),
 					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.m3u8").getFileName(), tempDir.resolve("output_720p.m3u8").toFile(), "application/x-mpegURL",executor1),
 //					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.m3u8").getFileName(), tempDir.resolve("output_1080p.m3u8").toFile(), "application/x-mpegURL",executor1)
+=======
+		
+			CompletableFuture<Void>[] futures = new CompletableFuture[] {
+					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/master.m3u8", tempFile.toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_144p.m3u8").getFileName(), tempDir.resolve("output_144p.m3u8").toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_360p.m3u8").getFileName(), tempDir.resolve("output_360p.m3u8").toFile(), "application/x-mpegURL",executor1),
+			//		uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_720p.m3u8").getFileName(), tempDir.resolve("output_720p.m3u8").toFile(), "application/x-mpegURL",executor1),
+					uploadFileWithContentTypeAsync(bucketName, objectNamePrefix + "/" + tempDir.resolve("output_1080p.m3u8").getFileName(), tempDir.resolve("output_1080p.m3u8").toFile(), "application/x-mpegURL",executor1)
+>>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
 			};
 			// Upload HLS video segment files with content type set
 			Files.list(tempDir)

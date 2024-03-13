@@ -1,6 +1,7 @@
 
 package com.terralogic.hros.lms.controller;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,15 +31,19 @@ import com.terralogic.hros.lms.utility.BackBlazeService;
 @RequestMapping("/api")
 
 public class VideoController {
+	
 	@Autowired
 	Environment environment;
+	
 	@Autowired
 	RequestContentRepo r1;
 	
 	@Value("${b2.userAgent}")
 	private String c;
+	
 	@Value("${secret1}")
 	private String c1;
+	
 	@Value("${spring.data}")
 	private String c2;
 
@@ -80,7 +85,12 @@ public class VideoController {
 				
 
 					try {
+<<<<<<< HEAD
 					//	videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+=======
+						System.out.println("mpd");
+						videoTranscodingService.transcodeAndStoreVideos(videoBytes, videoName, bucketName,fileUrl);
+>>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
 						System.out.println("mpd");
 					} catch (Exception e) {
 							//throw new TranscodingException("Transcoding failed for video " +  e);
@@ -94,7 +104,12 @@ public class VideoController {
 			CompletableFuture<Void> transcodingTask2 = CompletableFuture.runAsync(() -> {
 				
 					try {
+<<<<<<< HEAD
 						videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+=======
+						System.out.println("m3u8");
+					//	videoTranscodingService2.transcodeAndStoreVideos(videoBytes, videoName, bucketName);
+>>>>>>> fea1199ec82695e3a4403ddeb88f448c7e3250aa
 						System.out.println("m3u8");
 					}  catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -182,6 +197,13 @@ public class VideoController {
 		r1.save(r);
 		return r;
 		
+	}
+	
+	@GetMapping("/test")
+	public String fileName( @RequestParam String fileUrl ) {
+		String[] v = fileUrl.split("/");
+		String v1 = v[0] + "/" + v[1] + "/";
+		return v1;
 	}
 
 

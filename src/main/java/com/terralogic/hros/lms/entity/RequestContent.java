@@ -129,10 +129,10 @@ public class RequestContent {
 	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
-	public LocalDateTime getCreatedTimestamp() {
+	public String getCreatedTimestamp() {
 		return createdTimestamp;
 	}
-	public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+	public void setCreatedTimestamp(String createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
 	private String typeOfContent;
@@ -153,5 +153,6 @@ public class RequestContent {
 	private String accessType;  
 	private ApprovalStatus approvalStatus;  
 	private List<String> tags;
-	private LocalDateTime createdTimestamp;
+	private String createdTimestamp;
+	private String tenantId;
 }

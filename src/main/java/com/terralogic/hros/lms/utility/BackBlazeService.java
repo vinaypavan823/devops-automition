@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.backblaze.b2.client.B2ListFilesIterable;
 import com.backblaze.b2.client.B2StorageClient;
@@ -50,8 +51,9 @@ public class BackBlazeService {
 
 
 		logger.info("client details aree" + client);
-		String fileName="videos/"+videoName+"/master.m3u8";
-		String fileName1="videos/"+videoName+"/video.mpd";
+		String fileUrl = videoService.fileName(url);
+		String fileName=fileUrl+"Dash/"+videoName+"/master.m3u8";
+		String fileName1=fileUrl+"Dash/"+videoName+"/video.mpd";
 		logger.info("the file path is" + fileName);
 		List<B2Bucket> b2 = client.buckets();
 
@@ -173,6 +175,8 @@ public class BackBlazeService {
 		return client.getDownloadByNameUrl(a, fileUrl);  // Potentially throws B2Exception
 
 	}
+	
+	
 
 
 }

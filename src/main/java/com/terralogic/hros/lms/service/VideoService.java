@@ -21,12 +21,10 @@ import org.springframework.stereotype.Service;
 public class VideoService {
 	
 	 @Autowired
-	 private B2StorageClient client;
+	private B2StorageClient client;
     
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger(VideoService.class);
-    
- 
-    
+         
     String contentType = "mp4";
   
 	public void uploadVideo(String bucketName, String objectName, File file, String contentType) throws B2Exception, NoResourceFound {
@@ -48,7 +46,11 @@ public class VideoService {
 	public void executeFFmpegCommand(String command) throws  TranscodingException, IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
 	//	processBuilder.command("cmd.exe", "/c", command);
-	// processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
+	//	processBuilder.command("cmd.exe", "/c", "start", "cmd.exe", "/c", command);
+	//	processBuilder.command("sh", "-c", "gnome-terminal -- bash -c '" + command + "'");
+	//	processBuilder.command("xterm", "-e", command);
+
+
 		processBuilder.command("sh", "-c", command);
 		processBuilder.redirectErrorStream(true); // Redirect error stream to the input stream
 		Process process = processBuilder.start();
@@ -124,6 +126,12 @@ public class VideoService {
 		// Close input streams
 		process.getInputStream().close();
 		process.getErrorStream().close();
+	}
+	
+	public String fileName(String fileUrl ) {
+		String[] v = fileUrl.split("/");
+		String v1 = v[0] + "/" + v[1] + "/";
+		return v1;
 	}
 	
 }
